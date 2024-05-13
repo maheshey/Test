@@ -1,0 +1,69 @@
+{
+    "properties": {
+        "DisplayName": "AppService append sites with minimum TLS version to enforce.",
+        "Mode": "All",
+        "Description": "Append the AppService sites object to ensure that min Tls version is set to required minimum TLS version. Please note Append does not enforce compliance use then deny.",
+        "Metadata": {
+            "version": "1.0.1",
+            "category": "App Service"
+            "createdBy": "30d4dcd8-a234-4d41-8af2-5e6b435ad715",
+            "createdOn": "2021-06-21T22:04:26.9568713Z",
+            "updatedBy": null,
+            "updatedOn": null
+        },
+        "PolicyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "Microsoft.Web/sites/config/minTlsVersion",
+                        "exists": "true"
+                    },
+                    {
+                        "field": "Microsoft.Web/sites/config/minTlsVersion",
+                        "notEquals": "[parameters('minTlsVersion')]"
+                    }
+                ]
+            },
+            "then": {
+                "effect": "[parameters('effect')]",
+                "details": [
+                    {
+                        "field": "Microsoft.Web/sites/config/minTlsVersion",
+                        "value": "[parameters('minTlsVersion')]"
+                    }
+                ]
+            }
+        },
+        "parameters": {
+            "effect": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Effect",
+                    "description": "Enable or disable the execution of the policy"
+                },
+                "allowedValues": [
+                    "Append",
+                    "Disabled"
+                ],
+                "defaultValue": "Append"
+            },
+            "minTlsVersion": {
+                "type": "String",
+                "metadata": {
+                    "displayName": "Select version minimum TLS Web App config",
+                    "description": "Select version  minimum TLS version for a  Web App config to enforce"
+                },
+                "allowedValues": [
+                    "1.2",
+                    "1.0",
+                    "1.1"
+                ],
+                "defaultValue": "1.2"
+            }
+        },
+        "policyType": "Custom"
+    },
+    "name": "Append-AppService-latestTLS",
+    "id": "/providers/Microsoft.Management/managementGroups/mg-group/providers/Microsoft.Authorization/policyDefinitions/Append-AppService-latestTLS",
+    "type": "Microsoft.Authorization/policyDefinitions"
+}
